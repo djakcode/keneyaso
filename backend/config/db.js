@@ -1,5 +1,5 @@
 const Sequelize = require("sequelize");
-const ENV = require("./index.js");
+const ENV = require("../config/index");
 
 console.log("Initialisation de MySQL...");
 
@@ -7,7 +7,7 @@ const db = new Sequelize(ENV.DATABASE, ENV.DB_USER, ENV.DB_PASSWORD, {
   host: ENV.HOST,
   dialect: ENV.DIALECT,
   port: ENV.DB_PORT,
-  logging: console.log,
+  logging: false,
 });
 
 // Connect to DB

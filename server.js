@@ -2,7 +2,7 @@ console.log("Le serveur est en marche...");
 
 const express = require("express");
 const ENV = require("./backend/config");
-const db = require("./backend/config/db");
+const { db } = require("./backend/models");
 
 const app = express();
 

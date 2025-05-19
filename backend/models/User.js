@@ -4,13 +4,21 @@ const db = require("../config/db");
 const User = db.define(
   "User",
   {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     phoneNumber: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.STRING,
       allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
     },
     password: {
       type: DataTypes.STRING,
@@ -29,3 +37,5 @@ const User = db.define(
     timestamps: true,
   }
 );
+
+module.exports = User;
