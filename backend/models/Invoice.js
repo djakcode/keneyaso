@@ -2,7 +2,7 @@ const { DataTypes } = require("sequelize");
 const db = require("../config/db");
 
 const Invoice = db.define(
-  "Involice",
+  "Invoice",
   {
     totalAmount: {
       type: DataTypes.FLOAT,

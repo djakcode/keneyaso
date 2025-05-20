@@ -13,6 +13,11 @@ const patientRoutes = require("./backend/routes/patientRoute");
 const pharmacyRoutes = require("./backend/routes/pharmacyRoute");
 const productRoutes = require("./backend/routes/productRoute");
 const insuranceRoutes = require("./backend/routes/insuranceRoute");
+const invoiceRoutes = require("./backend/routes/invoiceRoute");
+const prescriptionRoutes = require("./backend/routes/prescriptionRoute");
+const prescriptionItemRoutes = require("./backend/routes/prescriptionItemRoute");
+const invoiceItemRoutes = require("./backend/routes/invoiceItemRoute");
+const appointmentRoutes = require("./backend/routes/appointmentRoute");
 
 // PORT
 PORT = ENV.PORT;
@@ -24,6 +29,11 @@ app.use("/api/patients", patientRoutes);
 app.use("/api/pharmacies", pharmacyRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/insurances", insuranceRoutes);
+app.use("/api/invoices", invoiceRoutes);
+app.use("/api/prescriptions", prescriptionRoutes);
+app.use("/api/prescriptionItems", prescriptionItemRoutes);
+app.use("/api/invoiceItems", invoiceItemRoutes);
+app.use("/api/appointments", appointmentRoutes);
 
 // Middleware for error handling
 app.use((err, req, res, next) => {
