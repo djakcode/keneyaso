@@ -9,8 +9,9 @@ const User = db.define(
       allowNull: false,
     },
     phoneNumber: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.STRING,
       allowNull: false,
+      unique: true,
     },
     password: {
       type: DataTypes.STRING,
@@ -29,3 +30,5 @@ const User = db.define(
     timestamps: true,
   }
 );
+
+module.exports = User;

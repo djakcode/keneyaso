@@ -21,7 +21,7 @@ const Patient = db.define(
       },
     },
     phoneNumber: {
-      type: DataTypes.NUMBER,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     address: {

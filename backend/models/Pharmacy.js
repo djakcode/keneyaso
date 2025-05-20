@@ -8,16 +8,8 @@ const Pharmacy = db.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    category: {
+    location: {
       type: DataTypes.STRING,
-      allowNull: false,
-    },
-    stockQuantity: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    price: {
-      type: DataTypes.FLOAT,
       allowNull: false,
     },
   },

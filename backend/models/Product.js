@@ -1,29 +1,28 @@
 const { DataTypes } = require("sequelize");
 const db = require("../config/db");
 
-const Clinic = db.define(
-  "Clinic",
+const Product = db.define(
+  "Product",
   {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    address: {
+    description: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    phoneNumber: {
-      type: DataTypes.STRING,
+    price: {
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
-    email: {
-      type: DataTypes.STRING,
+    quantity: {
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
-    subscriptionStatus: {
-      type: DataTypes.TINYINT,
-      defaultValue: 0,
-      allowNull: false,
+    expirationDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
   {
@@ -31,4 +30,4 @@ const Clinic = db.define(
   }
 );
 
-module.exports = Clinic;
+module.exports = Product;
