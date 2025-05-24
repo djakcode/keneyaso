@@ -3,17 +3,46 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const ENV = require("../config/index");
+const { Clinic } = require("../models");
 
 const signup = async (req, res, next) => {
   try {
-    const { name, phoneNumber, password, role } = req.body;
+    const { name, phoneNumber, password, role, clinicId } = req.body;
+
+    // Vérify if req.body is correctly define
+    if (!name || !phoneNumber || !password || !role || !clinicId) {
+      return next(createError(400, "Tous les champs sont requis"));
+    }
+
+    // check if clinic exists
+    const clinic = await Clinic.findByPk(clinicId);
+    if (!clinic) return next(createError(404, "Clinique non trouvée"));
+
+    // Check if phoneNumber exists
+    const existingNumber = await User.findOne({
+      where: { phoneNumber },
+    });
+
+    if (existingNumber)
+      return next(createError(409, "Ce numéro est déjà utilisé"));
+
+    // check if user has auth to add
+    if (req.user.role !== "admin" || req.user.clinicId !== clinicId)
+      return next(
+        createError(
+          404,
+          "Vous n'etes pas autorisé à ajouter des utilisateurs à cette clinique"
+        )
+      );
+
     // hash password
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create(req.body, {
+    const user = await User.create({
       name,
       phoneNumber,
       password: hashedPassword,
       role,
+      clinicId,
     });
 
     res
@@ -26,9 +55,19 @@ const signup = async (req, res, next) => {
 
 const signin = async (req, res, next) => {
   try {
-    const user = await User.findOne(req.body, {
+    const user = await User.findOne({
       where: { phoneNumber: req.body.phoneNumber },
     });
+
+    // Check if user send required fields
+    if (!req.body.phoneNumber || !req.body.password) {
+      return next(
+        createError(
+          400,
+          "Le numéro de téléphone et le mot de passe sont requis"
+        )
+      );
+    }
 
     if (!user) return next(createError(404, "Aucun utilisateur trouvé"));
 
@@ -42,7 +81,9 @@ const signin = async (req, res, next) => {
       return next(createError(401, "Mot de passe incorrect"));
 
     // generate token
-    const token = jwt.sign({ id: user.id }, ENV.TOKEN, { expiresIn: "24h" });
+    const token = jwt.sign({ id: user.id, role: user.role }, ENV.TOKEN, {
+      expiresIn: "24h",
+    });
 
     // Send response without password
     const { password, ...userData } = user.dataValues;

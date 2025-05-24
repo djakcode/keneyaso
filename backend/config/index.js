@@ -10,6 +10,7 @@ const ENV = {
   DATABASE: process.env.DATABASE,
   DIALECT: process.env.DIALECT,
   DB_PORT: process.env.DB_PORT,
+  TOKEN: process.env.TOKEN,
 };
 
 module.exports = ENV;

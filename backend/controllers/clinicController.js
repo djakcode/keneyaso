@@ -1,13 +1,30 @@
 const Clinic = require("../models/Clinic");
 const createError = require("../middlewares/error");
+const { User } = require("../models");
 
 const createClinic = async (req, res, next) => {
   try {
-    const NewClinic = await Clinic.create(req.body);
+    const { name, address, userId } = req.body;
+
+    // check if user existe and is doctor or admin
+    const user = await User.findByPk(userId);
+    if (!user || (user.role !== "doctor" && user.role !== "admin"))
+      return next(
+        createError(
+          403,
+          "Seul un médecin ou administrateur peut créer une clinique."
+        )
+      );
+
+    // create clinic
+    const clinic = await Clinic.create({ name, address });
+    // link clinic to user
+    user.clinicId = clinic.id;
+    await user.save();
 
     res
       .status(201)
-      .json({ message: "Clinique créée avec succès", data: NewClinic });
+      .json({ message: "Clinique créée avec succès", data: clinic });
   } catch (error) {
     next(createError(500, "Erreur dans le serveur", error.message));
   }
@@ -51,7 +68,7 @@ const updateClinic = async (req, res, next) => {
       return next(createError(404, "Aucune clinique trouvée"));
 
     const updatedRows = await Clinic.findOne({
-      where: { id: req.body.id },
+      where: { id: req.params.id },
     });
 
     res

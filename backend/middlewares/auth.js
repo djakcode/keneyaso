@@ -3,19 +3,26 @@ const ENV = require("../config");
 const createError = require("./error");
 
 const verifyToken = (req, res, next) => {
-  // check is token is present in the request
-  const token = req.cookies.access_token;
+  try {
+    // Get token in cookies
+    const token = req.cookies.access_token;
 
-  // if token is not present, return error
-  if (!token) return next(createError(401, "Vous n'etes pas autorisé"));
+    if (!token) {
+      return next(createError(401, "Vous n'êtes pas autorisé"));
+    }
 
-  // verify token
-  jwt.verify(token, ENV.TOKEN, (err, user) => {
-    if (err) return next(createError(403, "Token pas valide")); // if token is invalid return error 403 for forbidden
+    // verify token
+    jwt.verify(token, ENV.TOKEN, (err, decoded) => {
+      if (err) {
+        return next(createError(403, "Token invalide ou expiré"));
+      }
 
-    req.user = user; // Set user in request object
-    next();
-  });
+      req.user = decoded; // add decoded datas token to req.user
+      next();
+    });
+  } catch (error) {
+    next(createError(500, "Erreur interne du serveur", error.message));
+  }
 };
 
 module.exports = verifyToken;

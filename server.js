@@ -3,6 +3,7 @@ console.log("Le serveur est en marche...");
 const express = require("express");
 const ENV = require("./backend/config");
 const { db } = require("./backend/models/index");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -21,6 +22,10 @@ const appointmentRoutes = require("./backend/routes/appointmentRoute");
 
 // PORT
 PORT = ENV.PORT;
+
+// midllewares
+app.use(express.json());
+app.use(cookieParser());
 
 // Prefix
 app.use("/api/users", userRoutes);
@@ -47,8 +52,6 @@ app.use((err, req, res, next) => {
     details,
   });
 });
-
-// midllewares
 
 // Server
 const startServer = async () => {
